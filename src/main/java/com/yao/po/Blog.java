@@ -39,6 +39,9 @@ public class Blog {
     @ManyToOne
     private  User user;
 
+    @Transient
+    private String tagIds;
+
 
     @OneToMany(mappedBy = "blog")
     private List<Comment> comments = new ArrayList<>();
@@ -180,6 +183,37 @@ public class Blog {
 
     public void setComments(List<Comment> comments) {
         this.comments = comments;
+    }
+
+    public String getTagIds() {
+        return tagIds;
+    }
+
+    public void setTagIds(String tagIds) {
+        this.tagIds = tagIds;
+    }
+
+    public void init() {
+        this.tagIds = tagsToIds(this.getTags());
+    }
+
+    //1,2,3
+    private String tagsToIds(List<Tag> tags) {
+        if (!tags.isEmpty()) {
+            StringBuffer ids = new StringBuffer();
+            boolean flag = false;
+            for (Tag tag : tags) {
+                if (flag) {
+                    ids.append(",");
+                } else {
+                    flag = true;
+                }
+                ids.append(tag.getId());
+            }
+            return ids.toString();
+        } else {
+            return tagIds;
+        }
     }
 
     @Override
